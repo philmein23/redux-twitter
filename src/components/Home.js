@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import { ICON_CONSTANTS } from '../constants';
+import Icon from './Icon';
 
 import { createElement } from 'glamor/react';
 import { css, select as $ } from 'glamor';
@@ -22,6 +24,7 @@ class Home extends Component {
           >
             {tweets.map(tweet => (
               <li
+                key={tweet.id}
                 className="tweet"
                 css={{
                   display: 'grid',
@@ -31,6 +34,7 @@ class Home extends Component {
               >
                 <img
                   className="avatar"
+                  alt={`${tweet.author}'s Avatar`}
                   src={users[tweet.author].avatarURL}
                 />
                 <div
@@ -44,6 +48,39 @@ class Home extends Component {
                     <div>{tweet.timestamp}</div>
                   </div>
                   <div>{tweet.text}</div>
+                </div>
+                <div
+                  className="tweet-icons"
+                  css={{
+                    gridColumn: '2/-1',
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, max-content)',
+                    gridGap: '20px',
+                    alignItems: 'center'
+                  }}
+                >
+                  <Icon path={ICON_CONSTANTS.reply.path} />
+                  <span
+                    css={
+                      tweet.replies.length >= 1
+                        ? { display: 'block' }
+                        : { display: 'none' }
+                    }
+                  >
+                    {tweet.replies.length}
+                  </span>
+                  <button className="heart-button">
+                    <Icon path={ICON_CONSTANTS.heart.path} />
+                  </button>
+                  <span
+                    css={
+                      tweet.likes.length >= 1
+                        ? { display: 'block' }
+                        : { display: 'none' }
+                    }
+                  >
+                    {tweet.likes.length}
+                  </span>
                 </div>
               </li>
             ))}

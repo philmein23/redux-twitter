@@ -1,16 +1,29 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import { ICON_CONSTANTS } from '../constants';
 import Icon from './Icon';
+import { formatTweet, formatDate } from '../utils/helpers';
+import { toggleSaveLike } from '../actions/tweets';
 
 import { createElement } from 'glamor/react';
 import { css, select as $ } from 'glamor';
 /* @jsx createElement */
 
 class Home extends Component {
+  toggleLike = tweet => {
+    const { authedUser } = this.props;
+
+    this.props.dispatch(
+      toggleSaveLike({
+        authedUser,
+        id: tweet.id,
+        hasLiked: tweet.hasLiked
+      })
+    );
+  };
+
   render() {
-    const { users, tweets } = this.props;
+    const { tweets } = this.props;
     return (
       <div>
         <h1 className="header">Your Timeline</h1>
@@ -35,7 +48,7 @@ class Home extends Component {
                 <img
                   className="avatar"
                   alt={`${tweet.author}'s Avatar`}
-                  src={users[tweet.author].avatarURL}
+                  src={tweet.avatar}
                 />
                 <div
                   css={{
@@ -44,7 +57,7 @@ class Home extends Component {
                   }}
                 >
                   <div className="tweet-info">
-                    <div>{users[tweet.author].name}</div>
+                    <div>{tweet.name}</div>
                     <div>{tweet.timestamp}</div>
                   </div>
                   <div>{tweet.text}</div>
@@ -62,24 +75,27 @@ class Home extends Component {
                   <Icon path={ICON_CONSTANTS.reply.path} />
                   <span
                     css={
-                      tweet.replies.length >= 1
+                      tweet.replies >= 1
                         ? { display: 'block' }
                         : { display: 'none' }
                     }
                   >
-                    {tweet.replies.length}
+                    {tweet.replies}
                   </span>
-                  <button className="heart-button">
+                  <button
+                    onClick={() => this.toggleLike(tweet)}
+                    className="heart-button"
+                  >
                     <Icon path={ICON_CONSTANTS.heart.path} />
                   </button>
                   <span
                     css={
-                      tweet.likes.length >= 1
+                      tweet.likes >= 1
                         ? { display: 'block' }
                         : { display: 'none' }
                     }
                   >
-                    {tweet.likes.length}
+                    {tweet.likes}
                   </span>
                 </div>
               </li>
@@ -91,20 +107,33 @@ class Home extends Component {
   }
 }
 
-function mapStateToProps({ tweets, users }) {
+function mapStateToProps({ tweets, users, authedUser }) {
   const tweetsList = Object.values(tweets)
     .map(tweet => {
-      tweet.timestamp = moment(tweet.timestamp).format(
-        'h:mm:ss a | MM/DD/YY'
-      );
+      let parentTweet = null;
 
-      return tweet;
+      if (typeof tweet.timestamp === 'number') {
+        tweet.timestamp = formatDate(tweet.timestamp);
+      }
+
+      if (tweet.replyingTo) {
+        parentTweet = {
+          id: tweet.replyingTo,
+          author: tweets[tweet.replyingTo].author
+        };
+      }
+
+      return formatTweet(
+        tweet,
+        users[tweet.author],
+        authedUser,
+        parentTweet
+      );
     })
     .sort((a, b) => b.timestamp - a.timestamp);
-
   return {
     tweets: tweetsList,
-    users
+    authedUser
   };
 }
 

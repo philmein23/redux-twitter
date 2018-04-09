@@ -64,3 +64,28 @@ a {
   margin: 0 15px 0 5px;
   font-size: 18px !important;
 }
+
+.tweet-icon:hover {
+  color: #00b5d6;
+  cursor: pointer;
+}
+
+.textarea {
+  border-radius: 4px;
+  border: 1px solid #dad7d7;
+  padding: 10px;
+  font-size: 15px;
+  height: 100px;
+}
+
+.btn {
+  text-transform: uppercase;
+  margin: 35px auto;
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.29);
+  cursor: pointer;
+  background: #fff;
+  font-size: 16px;
+  width: 250px;
+  position: relative;
+}

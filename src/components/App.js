@@ -9,6 +9,7 @@ import Navbar from './Navbar';
 import Home from './Home';
 import NewTweet from './NewTweet';
 import { handleGetInitialData } from '../actions/shared';
+import LoadingBar from 'react-redux-loading';
 
 class App extends Component {
   componentDidMount() {
@@ -19,22 +20,23 @@ class App extends Component {
     return (
       <div>
         <Router>
-          <div className="container">
-            <Navbar />
-            {this.props.loading ? (
-              <h1>Loading...</h1>
-            ) : (
-              <Switch>
-                <Route path="/" exact component={Home} />
-                <Route path="/addtweet" component={NewTweet} />
-                <Route
-                  render={() => (
-                    <h1 className="text-center">404 Error</h1>
-                  )}
-                />
-              </Switch>
-            )}
-          </div>
+          <Fragment>
+            <LoadingBar />
+            <div className="container">
+              <Navbar />
+              {this.props.loading ? null : (
+                <Switch>
+                  <Route path="/" exact component={Home} />
+                  <Route path="/addtweet" component={NewTweet} />
+                  <Route
+                    render={() => (
+                      <h1 className="text-center">404 Error</h1>
+                    )}
+                  />
+                </Switch>
+              )}
+            </div>
+          </Fragment>
         </Router>
       </div>
     );
@@ -43,9 +45,7 @@ class App extends Component {
 
 function mapStateToProps({ authedUser, users, tweets }) {
   return {
-    loading: authedUser === null,
-    users,
-    tweets
+    loading: authedUser === null
   };
 }
 

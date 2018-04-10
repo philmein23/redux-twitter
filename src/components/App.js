@@ -8,6 +8,7 @@ import {
 import Navbar from './Navbar';
 import Home from './Home';
 import NewTweet from './NewTweet';
+import TweetPage from './TweetPage';
 import { handleGetInitialData } from '../actions/shared';
 import LoadingBar from 'react-redux-loading';
 
@@ -27,6 +28,7 @@ class App extends Component {
               {this.props.loading ? null : (
                 <Switch>
                   <Route path="/" exact component={Home} />
+                  <Route path="/tweet/:id" component={TweetPage} />
                   <Route path="/addtweet" component={NewTweet} />
                   <Route
                     render={() => (

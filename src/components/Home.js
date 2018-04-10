@@ -67,36 +67,42 @@ class Home extends Component {
                   css={{
                     gridColumn: '2/-1',
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(4, max-content)',
-                    gridGap: '20px',
+                    gridTemplateColumns: 'repeat(2, max-content)',
+                    gridGap: '10px',
                     alignItems: 'center'
                   }}
                 >
-                  <Icon path={ICON_CONSTANTS.reply.path} />
-                  <span
-                    css={
-                      tweet.replies >= 1
-                        ? { display: 'block' }
-                        : { display: 'none' }
-                    }
-                  >
-                    {tweet.replies}
-                  </span>
+                  <Icon path={ICON_CONSTANTS.reply.path}>
+                    <span
+                      css={
+                        tweet.replies >= 1
+                          ? { display: 'block' }
+                          : { display: 'none' }
+                      }
+                    >
+                      {tweet.replies}
+                    </span>
+                  </Icon>
+
                   <button
                     onClick={() => this.toggleLike(tweet)}
                     className="heart-button"
                   >
-                    <Icon path={ICON_CONSTANTS.heart.path} />
+                    <Icon
+                      hasLiked={tweet.hasLiked}
+                      path={ICON_CONSTANTS.heart.path}
+                    >
+                      <span
+                        css={
+                          tweet.likes >= 1
+                            ? { display: 'block' }
+                            : { display: 'none' }
+                        }
+                      >
+                        {tweet.likes}
+                      </span>
+                    </Icon>
                   </button>
-                  <span
-                    css={
-                      tweet.likes >= 1
-                        ? { display: 'block' }
-                        : { display: 'none' }
-                    }
-                  >
-                    {tweet.likes}
-                  </span>
                 </div>
               </li>
             ))}

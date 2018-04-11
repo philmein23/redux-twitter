@@ -24,7 +24,6 @@ class Tweet extends Component {
 
   render() {
     const { tweet } = this.props;
-
     return (
       <Link to={{ pathname: `/tweet/${tweet.id}` }}>
         <li
@@ -50,6 +49,11 @@ class Tweet extends Component {
             <div className="tweet-info">
               <div>{tweet.name}</div>
               <div>{tweet.timestamp}</div>
+              {tweet.parent && (
+                <button className="replying-to">
+                  Relying to @{tweet.parent.author}
+                </button>
+              )}
             </div>
             <div>{tweet.text}</div>
           </div>

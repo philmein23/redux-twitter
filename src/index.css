@@ -89,3 +89,12 @@ a {
   width: 250px;
   position: relative;
 }
+
+.replying-to {
+  margin: 0;
+  padding: 0;
+  color: #969696;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}

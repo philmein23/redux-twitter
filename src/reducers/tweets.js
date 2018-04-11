@@ -10,8 +10,13 @@ export default function tweets(state = {}, action) {
   }
 
   if (action.type === ADD_TWEET) {
+    const parentTweet = state[action.tweet.replyingTo];
     return {
       ...state,
+      [action.tweet.replyingTo]: {
+        ...parentTweet,
+        replies: parentTweet.replies.concat(action.tweet.id)
+      },
       [action.tweet.id]: action.tweet
     };
   }

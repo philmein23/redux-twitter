@@ -19,19 +19,25 @@ class NewTweet extends Component {
     e.preventDefault();
 
     const { tweet } = this.state;
-    const { authedUser, parentTweet = null } = this.props;
+    const { authedUser, parentTweet } = this.props;
 
-    if (parentTweet.id) {
+    let parentId = null;
+
+    if (parentTweet && parentTweet.id) {
       this.props.history.push(`/tweet/${parentTweet.id}`);
+
+      parentId = parentTweet.id;
     } else {
       this.props.history.push('/');
+
+      parentId = null;
     }
 
     this.props.dispatch(
       addNewTweet({
         text: tweet,
         author: authedUser,
-        replyingTo: parentTweet.id
+        replyingTo: parentId
       })
     );
   };

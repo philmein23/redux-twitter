@@ -10,14 +10,23 @@ export default function tweets(state = {}, action) {
   }
 
   if (action.type === ADD_TWEET) {
-    const parentTweet = state[action.tweet.replyingTo];
+    let replyingTo = {};
+
+    if (action.tweet.replyingTo) {
+      const parentTweet = state[action.tweet.replyingTo];
+
+      replyingTo = {
+        [action.tweet.replyingTo]: {
+          ...parentTweet,
+          replies: parentTweet.replies.concat(action.tweet.id)
+        }
+      };
+    }
+
     return {
       ...state,
-      [action.tweet.replyingTo]: {
-        ...parentTweet,
-        replies: parentTweet.replies.concat(action.tweet.id)
-      },
-      [action.tweet.id]: action.tweet
+      [action.tweet.id]: action.tweet,
+      ...replyingTo
     };
   }
 

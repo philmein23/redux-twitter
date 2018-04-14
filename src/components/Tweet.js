@@ -32,7 +32,8 @@ class Tweet extends Component {
           css={{
             display: 'grid',
             gridTemplateColumns: 'max-content 1fr',
-            gridGap: '10px'
+            gridGap: '10px',
+            marginBottom: '10px'
           }}
         >
           <img

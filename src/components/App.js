@@ -45,9 +45,9 @@ class App extends Component {
   }
 }
 
-function mapStateToProps({ authedUser, users, tweets }) {
+function mapStateToProps({ authedUser, users, tweets, loadingBar }) {
   return {
-    loading: authedUser === null
+    loading: loadingBar === 1
   };
 }
 

@@ -4,6 +4,7 @@ import { ICON_CONSTANTS } from '../constants';
 import Icon from './Icon';
 import { toggleSaveLike } from '../actions/tweets';
 import { Link } from 'react-router-dom';
+import { formatTweet, formatDate } from '../utils/helpers';
 
 import { createElement } from 'glamor/react';
 import { css, select as $ } from 'glamor';
@@ -106,8 +107,29 @@ class Tweet extends Component {
   }
 }
 
-function mapStateToProps({ authedUser, tweets }) {
+function mapStateToProps({ authedUser, users, tweets }, { id }) {
+  const tweet = tweets[id];
+
+  let parentTweet = null;
+
+  if (typeof tweet.timestamp === 'number') {
+    tweet.timestamp = formatDate(tweet.timestamp);
+  }
+
+  if (tweet.replyingTo) {
+    parentTweet = {
+      id: tweet.replyingTo,
+      author: tweets[tweet.replyingTo].author
+    };
+  }
+
   return {
+    tweet: formatTweet(
+      tweet,
+      users[tweet.author],
+      authedUser,
+      parentTweet
+    ),
     authedUser
   };
 }

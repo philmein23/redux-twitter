@@ -8,11 +8,22 @@ import { css, select as $ } from 'glamor';
 
 class NewTweet extends Component {
   state = {
-    tweet: ''
+    tweet: '',
+    showLimitWarning: false
+  };
+
+  isDisabled = () => {
+    const { tweet } = this.state;
+
+    return tweet && tweet.length <= 280 ? false : true;
   };
 
   handleTweetChange = e => {
     this.setState({ tweet: e.target.value });
+
+    this.state.tweet.length >= 180
+      ? this.setState({ showLimitWarning: true })
+      : this.setState({ showLimitWarning: false });
   };
 
   addTweet = e => {
@@ -23,23 +34,25 @@ class NewTweet extends Component {
 
     let parentId = null;
 
-    if (parentTweet && parentTweet.id) {
-      this.props.history.push(`/tweet/${parentTweet.id}`);
+    this.props
+      .dispatch(
+        addNewTweet({
+          text: tweet,
+          author: authedUser,
+          replyingTo: parentId
+        })
+      )
+      .then(data => {
+        if (parentTweet && parentTweet.id) {
+          this.props.history.push(`/tweet/${parentTweet.id}`);
 
-      parentId = parentTweet.id;
-    } else {
-      this.props.history.push('/');
+          parentId = parentTweet.id;
+        } else {
+          this.props.history.push('/');
 
-      parentId = null;
-    }
-
-    this.props.dispatch(
-      addNewTweet({
-        text: tweet,
-        author: authedUser,
-        replyingTo: parentId
-      })
-    );
+          parentId = null;
+        }
+      });
   };
 
   render() {
@@ -59,10 +72,19 @@ class NewTweet extends Component {
           onChange={this.handleTweetChange}
           placeholder="What's Happening?"
           className="textarea"
-          maxLength="280"
         />
-        <button className="btn" type="submit">
-          Submit`
+        {this.state.showLimitWarning && (
+          <div className="tweet-length">
+            {280 - this.state.tweet.length} characters left
+          </div>
+        )}
+
+        <button
+          disabled={this.isDisabled()}
+          className="btn"
+          type="submit"
+        >
+          Submit
         </button>
       </form>
     );

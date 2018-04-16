@@ -23,7 +23,7 @@ class Home extends Component {
             }}
           >
             {tweets.map(tweet => (
-              <Tweet key={tweet.id} tweet={tweet} />
+              <Tweet key={tweet.id} id={tweet.id} />
             ))}
           </ul>
         </div>
@@ -32,33 +32,11 @@ class Home extends Component {
   }
 }
 
-function mapStateToProps({ tweets, users, authedUser }) {
-  const tweetsList = Object.values(tweets)
-    .map(tweet => {
-      let parentTweet = null;
-
-      if (typeof tweet.timestamp === 'number') {
-        tweet.timestamp = formatDate(tweet.timestamp);
-      }
-
-      if (tweet.replyingTo) {
-        parentTweet = {
-          id: tweet.replyingTo,
-          author: tweets[tweet.replyingTo].author
-        };
-      }
-
-      return formatTweet(
-        tweet,
-        users[tweet.author],
-        authedUser,
-        parentTweet
-      );
-    })
-    .sort((a, b) => b.timestamp - a.timestamp);
+function mapStateToProps({ tweets }) {
   return {
-    tweets: tweetsList,
-    authedUser
+    tweets: Object.values(tweets).sort(
+      (a, b) => b.timestamp - a.timestamp
+    )
   };
 }
 
